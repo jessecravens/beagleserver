@@ -1,0 +1,8 @@
+
+
+.uploadArea{ min-height:300px; height:auto; border:1px dotted #ccc; padding:10px; cursor:move; margin-bottom:10px; position:relative;}
+
+.uploadArea h3{ color:#ccc; width:100%; z-index:0; text-align:center; vertical-align:middle; position:absolute; top:25px;}
+
+.invalid { border:1px solid red !important; }
+.progress-icon img{ margin-top:7px; margin-left:24px; }
