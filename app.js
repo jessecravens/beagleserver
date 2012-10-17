@@ -15,6 +15,20 @@ db.once('open', function () {
   console.log('yo');
 });
 
+
+// var imageSchema = new mongoose.Schema({
+//     obj: { data: Buffer, contentType: String }
+// })
+
+var imageSchema = new mongoose.Schema({
+  name:    	String,
+  contentType: String,
+  binary:  Buffer
+})
+
+// Image model
+var Image = db.model('Image', imageSchema);
+
 var app = express.createServer();
 
 // HTML Configuration
@@ -96,7 +110,28 @@ var app = express.createServer();
 	app.post('/file-upload', function(req, res, next) {
 	    console.log(req.body);
 	    console.log(req.files.file.path);
+	    console.log('req.files: ' , req.files);
 	    res.send('File uploaded at: '  + req.files.file.size + ' bytes');
+
+		var img = new Image;
+
+		//  img.obj.data = fs.readFileSync(req.files.file.path);
+		//  img.obj.contentType = req.files.file.type;
+		//  img.save(function (err, img) {
+		//	  console.log(img);	
+		//    if (err) throw err;
+		//  }
+
+		img.name = req.files.file.name;
+		img.contentType = req.files.file.type;
+		img.binary = fs.readFileSync(req.files.file.path);
+
+		//console.log('img: ' , img);
+		img.save(function (err, img) {
+		  	console.log(img);	
+			if (err) throw err;
+		});
+
 	});
 
 	// app.post('/file-upload', function(req, res) {
@@ -119,9 +154,6 @@ var app = express.createServer();
 
 
 // API server ////////////////////////////////////////////////////////////////////////
-
-
-
 
 // HTML Routes
 	// app.get('/', function(req, res){

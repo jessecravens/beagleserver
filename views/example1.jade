@@ -9,36 +9,150 @@
             input(type="submit", name="submitHandler", id="submitHandler", value="Upload", class="buttonUpload btn btn-primary btn-large")
           .progressBar
           .status
+          section#options
+            ul.clearfix
+              li#insert
+                a(href='#insert') Insert new elements
+              li#append
+                a(href='#append') Append new elements
+              li#prepend
+                a(href='#prepend') Prepend
+          #container.clearfix
+            .element.transition.metal(data-symbol='Hg', data-category='transition')
+              p.number 80
+              h3.symbol Hg
+              h2.name Mercury
+              p.weight 200.59
+            .element.metalloid(data-symbol='Te', data-category='metalloid')
+              p.number 52
+              h3.symbol Te
+              h2.name Tellurium
+              p.weight 127.6
+            .element.post-transition.metal(data-symbol='Bi', data-category='post-transition')
+              p.number 83
+              h3.symbol Bi
+              h2.name Bismuth
+              p.weight 208.9804
+            .element.transition.metal(data-symbol='Cd', data-category='transition')
+              p.number 48
+              h3.symbol Cd
+              h2.name Cadmium
+              p.weight 112.411
+            .element.alkaline-earth.metal(data-symbol='Ca', data-category='alkaline-earth')
+              p.number 20
+              h3.symbol Ca
+              h2.name Calcium
+              p.weight 40.078
+            .element.transition.metal(data-symbol='Re', data-category='transition')
+              p.number 75
+              h3.symbol Re
+              h2.name Rhenium
+              p.weight 186.207
+            .element.post-transition.metal(data-symbol='Tl', data-category='post-transition')
+              p.number 81
+              h3.symbol Tl
+              h2.name Thallium
+              p.weight 204.3833
+            .element.metalloid(data-symbol='Sb', data-category='metalloid')
+              p.number 51
+              h3.symbol Sb
+              h2.name Antimony
+              p.weight 121.76
+            .element.transition.metal(data-symbol='Co', data-category='transition')
+              p.number 27
+              h3.symbol Co
+              h2.name Cobalt
+              p.weight 58.933195
+            .element.lanthanoid.metal.inner-transition(data-symbol='Lu', data-category='lanthanoid')
+              p.number 71
+              h3.symbol Lu
+              h2.name Lutetium
+              p.weight 174.9668
+            .element.noble-gas.nonmetal(data-symbol='Ar', data-category='noble-gas')
+              p.number 18
+              h3.symbol Ar
+              h2.name Argon
+              p.weight 39.948
+            .element.alkali.metal(data-symbol='Rb', data-category='alkali')
+              p.number 37
+              h3.symbol Rb
+              h2.name Rubidium
+              p.weight 85.4678
+            .element.other.nonmetal(data-symbol='N', data-category='other')
+              p.number 7
+              h3.symbol N
+              h2.name Nitrogen
+              p.weight 14.0067
+            .element.actinoid.metal.inner-transition(data-symbol='Np', data-category='actinoid')
+              p.number 93
+              h3.symbol Np
+              h2.name Neptunium
+              p.weight (237)
+            .element.actinoid.metal.inner-transition(data-symbol='Ac', data-category='actinoid')
+              p.number 89
+              h3.symbol Ac
+              h2.name Actinium
+              p.weight (227)
 
-    script(src='http://platform.twitter.com/widgets.js')
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js')
-    script(src='assets/js/multiupload.js')
-    script(src='assets/js/google-code-prettify/prettify.js')
-    script(src='assets/js/bootstrap-transition.js')
-    script(src='assets/js/bootstrap-alert.js')
-    script(src='assets/js/bootstrap-modal.js')
-    script(src='assets/js/bootstrap-dropdown.js')
-    script(src='assets/js/bootstrap-scrollspy.js')
-    script(src='assets/js/bootstrap-tab.js')
-    script(src='assets/js/bootstrap-tooltip.js')
-    script(src='assets/js/bootstrap-popover.js')
-    script(src='assets/js/bootstrap-button.js')
-    script(src='assets/js/bootstrap-collapse.js')
-    script(src='assets/js/bootstrap-carousel.js')
-    script(src='assets/js/bootstrap-typeahead.js')
-    script(src='assets/js/application.js')
+script(src='http://platform.twitter.com/widgets.js')
+script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js')
+script(src='assets/js/multiupload.js')
+script(src='assets/js/google-code-prettify/prettify.js')
+script(src='assets/js/bootstrap-transition.js')
+script(src='assets/js/bootstrap-alert.js')
+script(src='assets/js/bootstrap-modal.js')
+script(src='assets/js/bootstrap-dropdown.js')
+script(src='assets/js/bootstrap-scrollspy.js')
+script(src='assets/js/bootstrap-tab.js')
+script(src='assets/js/bootstrap-tooltip.js')
+script(src='assets/js/bootstrap-popover.js')
+script(src='assets/js/bootstrap-button.js')
+script(src='assets/js/bootstrap-collapse.js')
+script(src='assets/js/bootstrap-carousel.js')
+script(src='assets/js/bootstrap-typeahead.js')
+script(src='assets/js/application.js')
+script(src='assets/js/jquery.isotope.min.js')
+script(src='assets/js/fake-element.js')
+script
+  $(function(){
+  var $container = $('#container');
+  $('#insert a').click(function(){
+  var $newEls = $( fakeElement.getGroup() );
+  $container.isotope( 'insert', $newEls );
+  return false;
+  });
+  $('#append a').click(function(){
+  var $newEls = $( fakeElement.getGroup() );
+  $container.append( $newEls ).isotope( 'appended', $newEls );
+  return false;
+  });
+  $('#prepend a').click(function(){
+  var $newEls = $( fakeElement.getGroup() );
+  $container
+  .prepend( $newEls ).isotope('reloadItems').isotope({ sortBy: 'original-order' })
+  // set sort back to symbol for inserting
+  .isotope('option', { sortBy: 'symbol' });
+  return false;
+  });
+  $container.isotope({
+  itemSelector : '.element',
+  filter: '*',
+  getSortData : {
+  symbol : function( $elem ) {
+  return $elem.attr('data-symbol');
+  }
+  },
+  sortBy : 'symbol'
+  });
+  });
 
-    script
-      var config = {
-        support : "image/jpg,image/png,image/bmp,image/jpeg,image/gif",   // Valid file formats
-        form: "demoFiler",          // Form ID
-        dragArea: "dragAndDropFiles",   // Upload Area ID
-        uploadUrl: "/file-upload"       // Server side upload url
-      }
-      $(document).ready(function(){
-        initMultiUploader(config);
-      });
-
-
-
-
+script
+  var config = {
+    support : "image/jpg,image/png,image/bmp,image/jpeg,image/gif",   // Valid file formats
+    form: "demoFiler",          // Form ID
+    dragArea: "dragAndDropFiles",   // Upload Area ID
+    uploadUrl: "/file-upload"       // Server side upload url
+  }
+  $(document).ready(function(){
+    initMultiUploader(config);
+  });

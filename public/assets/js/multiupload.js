@@ -1,3 +1,19 @@
+
+// check for browser support - use Modernizr
+// check for properly formatted config obj
+// dragover, drop event support
+// check that listeners were defined
+// firing of callbacks - change, dragover, drop, submit
+// _read()
+// _dropFiles()
+// validation within _validate
+// blob creation witihin _uploader
+// _unique call
+// ajax within _uploader
+// icon creation within _preview
+// recursive call within _uploader
+// ajax response
+
 function multiUploader(config){
   
 	this.config = config;
@@ -9,7 +25,10 @@ function multiUploader(config){
 		if (window.File && 
 			window.FileReader && 
 			window.FileList && 
-			window.Blob) {		
+			window.Blob) {
+			
+			 console.log("Browser supports File, FileReader, FileList, Blob");
+
 			 var inputId = $("#"+this.config.form).find("input[type='file']").eq(0).attr("id");
 			 document.getElementById(inputId).addEventListener("change", this._read, false);
 			 document.getElementById(this.config.dragArea).addEventListener("dragover", function(e){ e.stopPropagation(); e.preventDefault(); }, false);
@@ -81,8 +100,11 @@ function multiUploader(config){
 				success:function(rponse){
 					console.log(rponse);
 					console.log($(".dfiles[rel='"+ids+"']"));
-					$(".dfiles[rel='"+ids+"']").hide();
-					$(".dfiles[rel='"+ids+"']").after("<img src='assets/img/check.png'/>");
+					$(".dfiles[rel='"+ids+"']").fadeOut('slow',function(){
+						$(".dfiles[rel='"+ids+"']").hide();
+						$(".dfiles[rel='"+ids+"']").after("<img src='assets/img/check.png' style='display: block; margin: 5px'/>");
+					});
+					
 					var obj = $(".dfiles").get();
 					$.each(obj,function(k,fle){
 						if($(fle).attr("rel") == rponse){
@@ -117,5 +139,5 @@ function multiUploader(config){
 }
 
 function initMultiUploader(){
-	new multiUploader(config);
+	new multiUploader(config);	
 }
