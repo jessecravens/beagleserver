@@ -1,4 +1,9 @@
 
+h5{
+font-size: 20px;
+line-height: 1.5;
+}
+
 
 .uploadArea{ min-height:300px; height:auto; border:1px dotted #ccc; padding:10px; cursor:move; margin-bottom:10px; position:relative;}
 

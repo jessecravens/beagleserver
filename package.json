@@ -4,7 +4,11 @@
   , "private": true
   , "dependencies": {
       "express": "2.5.8"
+    , "connect": "latest"      
     , "jade": ">= 0.0.1"
     , "mongoose": "latest"
+    , "socket.io": "latest"
+    , "useragent": "latest" 
+    , "googlemaps": "latest" 
   }
 }
