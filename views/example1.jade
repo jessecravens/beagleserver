@@ -1,9 +1,6 @@
 .container
     header.masthead
         .inner
-          h2 Connected Clients
-          #viewers
-          #locations
           h2 Multi-DandD Img Upload
           #dragAndDropFiles.uploadArea
             h3 Drop Images Here
@@ -12,59 +9,6 @@
             input(type="submit", name="submitHandler", id="submitHandler", value="Upload", class="buttonUpload btn btn-primary btn-large")
           .progressBar
           .status
-          section#options
-            ul.clearfix
-              li#insert
-                a(href='#insert') Insert new elements
-              li#append
-                a(href='#append') Append new elements
-              li#prepend
-                a(href='#prepend') Prepend
-          #container.clearfix
-            .element.transition.metal(data-symbol='Hg', data-category='transition')
-            .element.metalloid(data-symbol='Te', data-category='metalloid')
-            .element.post-transition.metal(data-symbol='Bi', data-category='post-transition')
-            .element.transition.metal(data-symbol='Cd', data-category='transition')
-            .element.alkaline-earth.metal(data-symbol='Ca', data-category='alkaline-earth')
-            .element.transition.metal(data-symbol='Re', data-category='transition')
-            .element.post-transition.metal(data-symbol='Tl', data-category='post-transition')
-            .element.metalloid(data-symbol='Sb', data-category='metalloid')
-            .element.transition.metal(data-symbol='Co', data-category='transition')
-            .element.lanthanoid.metal.inner-transition(data-symbol='Lu', data-category='lanthanoid')
-            .element.noble-gas.nonmetal(data-symbol='Ar', data-category='noble-gas')
-            .element.alkali.metal(data-symbol='Rb', data-category='alkali')
-            .element.other.nonmetal(data-symbol='N', data-category='other')
-            .element.actinoid.metal.inner-transition(data-symbol='Np', data-category='actinoid')
-            .element.actinoid.metal.inner-transition(data-symbol='Ac', data-category='actinoid')
-
-          #container2.photos.clearfix
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013039951/', title='Stanley by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4113/5013039951_3a47ccd509.jpg', alt='Stanley')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013039885/', title='Officer by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4131/5013039885_0d16ac87bc.jpg', alt='Officer')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013039583/', title='Tony by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4086/5013039583_26717f6e89.jpg', alt='Tony')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013646070/', title='Kendra by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4146/5013646070_f1f44b1939.jpg', alt='Kendra')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013039541/', title='Giraffe by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4144/5013039541_17f2579e33.jpg', alt='Giraffe')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013039741/', title='Gavin by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4153/5013039741_d860fb640b.jpg', alt='Gavin')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013039697/', title='Anita by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4113/5013039697_a15e41fcd8.jpg', alt='Anita')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013646314/', title='Take My Portrait by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4124/5013646314_c7eaf84918.jpg', alt='Take My Portrait')
-            .photo
-              a(href='http://www.flickr.com/photos/nemoorange/5013040075/', title='Wonder by Dave DeSandro, on Flickr')
-                img(src='http://farm5.static.flickr.com/4089/5013040075_bac12ff74e.jpg', alt='Wonder')
 
 script(src='http://platform.twitter.com/widgets.js')
 script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js')
@@ -85,77 +29,6 @@ script(src='assets/js/bootstrap-typeahead.js')
 script(src='assets/js/application.js')
 script(src='assets/js/jquery.isotope.min.js')
 script(src='assets/js/fake-element.js')
-script(src='javascripts/jasmine/lib/jasmine-1.2.0/jasmine.js')
-script(src='javascripts/jasmine/lib/jasmine-jquery-1.3.1/jasmine-jquery-1.3.1.js')
-script(src='javascripts/jasmine/lib/jasmine-1.2.0/jasmine-html.js')
-script(src='javascripts/jasmine/spec/SpecHelper.js')
-script(src='javascripts/jasmine/spec/PlayerSpec.js')
-script(src='javascripts/jasmine/src/Player.js')
-script(src='javascripts/jasmine/src/Song.js')
-
-script
-  var socket = io.connect();
-
-  // I'm wondering if connection is deprecated? Yup, its connect.
-
-  socket.on('connect', function (data) {
-    console.log("client connect EVENT FIRED");
-    console.log('geo')
-    function success(position) {
-      console.log(position);
-      socket.emit('geo', { long: position.coords.longitude, lat: position.coords.latitude });
-    }
-
-    function error(msg) {
-      console.log(msg);
-    }
-
-    if (navigator.geolocation) {
-      console.log('supported')
-      navigator.geolocation.getCurrentPosition(success, error);
-    } else {
-      error('not supported');
-    };
-  });
-
-  socket.on('message', function (data) {
-    console.dir(data);
-    console.dir(JSON.parse(data));
-    var json = JSON.parse(data);    
-
-    if (json['state'] > -1) {
-      console.log('state: ' + json.state);
-      console.log("STATE MESSAGE");
-      // fire an event
-      $.deck('go', json.state);
-    }
-    if (json.cmd) {
-      console.log('cmd: ' + json.cmd);
-      console.log("CMD MESSAGE");
-      // call deck.js api
-      $.deck(json.cmd)
-    }
-    else if (json.clients) {
-      console.log('clients: ' + json.clients);
-      console.log("CLIENT NUMBER MESSAGE");   
-      // update the DOM
-      $('#viewers').text('viewers:' + json.clients);
-    }
-    else if (json.loc) {
-      console.log('loc: ' + json.loc);
-      console.log("CLIENT loc MESSAGE");  
-      // update the DOM
-      $('#locations').append('clientId: ' + json.clientId + ' @ ' + json.loc +'</br>');
-    }
-    else if (json.fn) {
-      console.log('callback fn: ' + json.fn);
-      console.log("FIRING SERVER DEFINED CALLBACK");
-      json.fn();
-    }
-
-    // $('#tweets').text('tweets:' + json.clients);
-
-  });
 
 script
     $(function(){
@@ -168,40 +41,6 @@ script
       });
 
 script
-  $(function(){
-    var $container = $('#container');
-
-    $('#insert a').click(function(){
-      var $newEls = $(fakeElement.getGroup());
-      $container.isotope('insert', $newEls);
-      return false;
-    });
-
-    $('#append a').click(function(){
-      var $newEls = $( fakeElement.getGroup() );
-      $container.append( $newEls ).isotope( 'appended', $newEls );
-      return false;
-    });
-
-    $('#prepend a').click(function(){
-      var $newEls = $( fakeElement.getGroup() );
-      $container.prepend($newEls).isotope('reloadItems').isotope({sortBy: 'original-order'}).isotope('option', { sortBy: 'symbol' });
-      return false;
-    });
-
-    $container.isotope({
-      itemSelector : '.element',
-      filter: '*',
-      getSortData : {
-        symbol : function( $elem ) {
-          return $elem.attr('data-symbol');
-        }
-      },
-      sortBy : 'symbol'
-    });
-  });
-
-script
   var config = {
     support : "image/jpg,image/png,image/bmp,image/jpeg,image/gif",   // Valid file formats
     form: "demoFiler",          // Form ID
@@ -211,27 +50,3 @@ script
   $(document).ready(function(){
     initMultiUploader(config);
   });
-
-script
-  (function() {
-    var jasmineEnv = jasmine.getEnv();
-    jasmineEnv.updateInterval = 1000;
-    var htmlReporter = new jasmine.HtmlReporter();
-    jasmineEnv.addReporter(htmlReporter);
-
-    jasmineEnv.specFilter = function(spec) {
-      return htmlReporter.specFilter(spec);
-    };
-
-    var currentWindowOnload = window.onload;
-    window.onload = function() {
-      if (currentWindowOnload) {
-        currentWindowOnload();
-      }
-      execJasmine();
-    };
-
-    function execJasmine() {
-      jasmineEnv.execute();
-    }
-  })();
