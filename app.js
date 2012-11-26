@@ -34,31 +34,6 @@ var Image = db.model('Image', imageSchema);
 var app = express.createServer();
 var store  = new express.session.MemoryStore;
 
-// HTML Configuration
-	// app.configure(function(){
-	//   app.use(express.static(__dirname + '/public'));
-	// 
-	//   // disable layout
-	//   app.set("view options", {layout: false});
-	// 
-	//   // make a custom html template
-	//   app.register('.html', {
-	//     compile: function(str, options){
-	//       return function(locals){
-	//         return str;
-	//       };
-	//     }
-	//   });
-	// });
-	// 
-	// app.configure('development', function(){
-	//   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	// });
-	// 
-	// app.configure('production', function(){
-	//   app.use(express.errorHandler());
-	// });
-
 // JADE Configuration ////////////////////////////////////////////////////////////////
 
 	app.configure(function(){
@@ -141,14 +116,6 @@ app.get('/api/images/:id', function (req, res){
     }
   });
 });
-
-// HTML Routes
-	// app.get('/', function(req, res){
-	//   res.render("index.html");
-	// });
-	// app.get('/index.html', function(req, res){
-	//   res.render("index.html");
-	// });
 
 app.listen(process.env.PORT || 3333);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
