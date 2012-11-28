@@ -31,6 +31,16 @@ var imageSchema = new mongoose.Schema({
 // Image model
 var Image = db.model('Image', imageSchema);
 
+var motionSchema = new mongoose.Schema({
+  name: String,
+  contentType: String,
+  binary:  Buffer
+})
+
+// Image model
+var Motion = db.model('Motion', motionSchema);
+
+
 var app = express.createServer();
 var store  = new express.session.MemoryStore;
 
@@ -88,8 +98,12 @@ var store  = new express.session.MemoryStore;
 		  	console.log(img);	
 			if (err) throw err;
 		});
-
 	});
+
+	app.post('/motion', function(req, res, next) {
+	    console.log(req.body);
+	    res.send('Motion data collected: '  + req.size + ' bytes');
+	});	
 
 // API server ////////////////////////////////////////////////////////////////////////
 

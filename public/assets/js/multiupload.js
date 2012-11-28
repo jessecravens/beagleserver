@@ -22,13 +22,11 @@ function multiUploader(config){
 	var self = this;
 	
 	multiUploader.prototype._init = function(){
+		console.log("_init")
 		if (window.File && 
 			window.FileReader && 
 			window.FileList && 
-			window.Blob) {
-			
-			 console.log("Browser supports File, FileReader, FileList, Blob");
-
+			window.Blob) {		
 			 var inputId = $("#"+this.config.form).find("input[type='file']").eq(0).attr("id");
 			 document.getElementById(inputId).addEventListener("change", this._read, false);
 			 document.getElementById(this.config.dragArea).addEventListener("dragover", function(e){ e.stopPropagation(); e.preventDefault(); }, false);
@@ -39,11 +37,13 @@ function multiUploader(config){
 	}
 	
 	multiUploader.prototype._submit = function(e){
+		console.log("_submit")
 		e.stopPropagation(); e.preventDefault();
 		self._startUpload();
 	}
 	
 	multiUploader.prototype._preview = function(data){
+		console.log("_preview")
 		this.items = data;
 		if(this.items.length > 0){
 			var html = "";		
@@ -65,6 +65,7 @@ function multiUploader(config){
 	}
 
 	multiUploader.prototype._read = function(evt){
+		console.log("_read")
 		if(evt.target.files){
 			self._preview(evt.target.files);
 			self.all.push(evt.target.files);
@@ -73,22 +74,34 @@ function multiUploader(config){
 	}
 	
 	multiUploader.prototype._validate = function(format){
+		console.log("_validate")
 		var arr = this.config.support.split(",");
 		return arr.indexOf(format);
 	}
 	
 	multiUploader.prototype._dropFiles = function(e){
+		console.log("_dropFiles")
 		e.stopPropagation(); e.preventDefault();
 		self._preview(e.dataTransfer.files);
 		self.all.push(e.dataTransfer.files);
 	}
+
+	// XMLHttpRequest Level 2 adds support for the new FormData interface.
+	// FormData objects provide a way to easily construct a set of key/value pairs representing form fields and their values, 
+	// which can then be easily sent using the XMLHttpRequest send() method.
+	// It uses the same format a form would use if the encoding type were set to "multipart/form-data".
 	
 	multiUploader.prototype._uploader = function(file,f){
+		console.log("_uploader")
 		if(typeof file[f] != undefined && self._validate(file[f].type) > 0){
+			
 			var data = new FormData();
 			var ids = file[f].name._unique();
+			
 			data.append('file',file[f]);
 			data.append('index',ids);
+			console.log("FormData: " , data)
+
 			$(".dfiles[rel='"+ids+"']").find(".progress-icon").show();
 			$.ajax({
 				type:"POST",
@@ -98,8 +111,9 @@ function multiUploader(config){
 				contentType: false,
 				processData: false,
 				success:function(rponse){
-					console.log(rponse);
-					console.log($(".dfiles[rel='"+ids+"']"));
+					
+					console.log("RESPONSE: " , rponse);
+					//console.log($(".dfiles[rel='"+ids+"']"));
 					$(".dfiles[rel='"+ids+"']").fadeOut('slow',function(){
 						$(".dfiles[rel='"+ids+"']").hide();
 						$(".dfiles[rel='"+ids+"']").after("<img src='assets/img/check.png' style='display: block; margin: 5px'/>");
@@ -121,6 +135,7 @@ function multiUploader(config){
 	}
 	
 	multiUploader.prototype._startUpload = function(){
+		console.log("_startUpload")
 		if(this.all.length > 0){
 			for(var k=0; k<this.all.length; k++){
 				var file = this.all[k];
@@ -130,6 +145,7 @@ function multiUploader(config){
 	}
 	
 	String.prototype._unique = function(){
+		console.log("_unique")
 		return this.replace(/[a-zA-Z]/g, function(c){
      	   return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
     	});

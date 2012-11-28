@@ -4,8 +4,9 @@ function multiUploader(config){
 	this.items = "";
 	this.all = []
 	var self = this;
-	
+
 	multiUploader.prototype._init = function(){
+		console.log("_init")
 		if (window.File && 
 			window.FileReader && 
 			window.FileList && 
@@ -20,11 +21,13 @@ function multiUploader(config){
 	}
 	
 	multiUploader.prototype._submit = function(e){
+		console.log("_submit")
 		e.stopPropagation(); e.preventDefault();
 		self._startUpload();
 	}
 	
 	multiUploader.prototype._preview = function(data){
+		console.log("_preview")
 		this.items = data;
 		if(this.items.length > 0){
 			var html = "";		
@@ -46,6 +49,7 @@ function multiUploader(config){
 	}
 
 	multiUploader.prototype._read = function(evt){
+		console.log("_read")
 		if(evt.target.files){
 			self._preview(evt.target.files);
 			self.all.push(evt.target.files);
@@ -54,22 +58,36 @@ function multiUploader(config){
 	}
 	
 	multiUploader.prototype._validate = function(format){
+		console.log("_validate")
 		var arr = this.config.support.split(",");
 		return arr.indexOf(format);
 	}
 	
 	multiUploader.prototype._dropFiles = function(e){
+		console.log("_dropFiles")
 		e.stopPropagation(); e.preventDefault();
 		self._preview(e.dataTransfer.files);
 		self.all.push(e.dataTransfer.files);
 	}
 	
+	// XMLHttpRequest Level 2 adds support for the new FormData interface.
+	// FormData objects provide a way to easily construct a set of key/value pairs representing form fields and their values, 
+	// which can then be easily sent using the XMLHttpRequest send() method.
+	// It uses the same format a form would use if the encoding type were set to "multipart/form-data".
+	
 	multiUploader.prototype._uploader = function(file,f){
+		console.log("_uploader")
 		if(typeof file[f] != undefined && self._validate(file[f].type) > 0){
+
 			var data = new FormData();
+
 			var ids = file[f].name._unique();
+			
 			data.append('file',file[f]);
 			data.append('index',ids);
+
+			console.log(data)
+			
 			$(".dfiles[rel='"+ids+"']").find(".progress").show();
 			$.ajax({
 				type:"POST",
@@ -96,6 +114,7 @@ function multiUploader(config){
 	}
 	
 	multiUploader.prototype._startUpload = function(){
+		console.log("_startUpload")
 		if(this.all.length > 0){
 			for(var k=0; k<this.all.length; k++){
 				var file = this.all[k];
@@ -105,6 +124,7 @@ function multiUploader(config){
 	}
 	
 	String.prototype._unique = function(){
+		console.log("_unique")
 		return this.replace(/[a-zA-Z]/g, function(c){
      	   return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
     	});
