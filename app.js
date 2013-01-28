@@ -3,43 +3,17 @@
  */
 var express = require('express')
   , routes = require('./routes')
-  , connect = require('connect')
-  , mongoose = require('mongoose')
-  , fs = require('fs')
-  , io = require('socket.io')
-  , useragent = require('useragent')
-  , gm = require('googlemaps');
 
-var db = mongoose.createConnection('localhost', 'imageAPI');
+// Beaglebone Access
+require('bonescript');
 
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-  console.log('db opened' , db);
-});
+ledPin = bone.P8_3;
+ledPin2 = bone.P8_4;
 
-// May want to use a Nested Schema?
-// var imageSchema = new mongoose.Schema({
-//     obj: { data: Buffer, contentType: String }
-// })
-
-var imageSchema = new mongoose.Schema({
-  name:    	String,
-  contentType: String,
-  binary:  Buffer
-})
-
-// Image model
-var Image = db.model('Image', imageSchema);
-
-var motionSchema = new mongoose.Schema({
-  name: String,
-  contentType: String,
-  binary:  Buffer
-})
-
-// Image model
-var Motion = db.model('Motion', motionSchema);
-
+setup = function() {
+    pinMode(ledPin, OUTPUT);
+    pinMode(ledPin2, OUTPUT);
+};
 
 var app = express.createServer();
 var store  = new express.session.MemoryStore;
@@ -49,15 +23,10 @@ var store  = new express.session.MemoryStore;
 	app.configure(function(){
 	  app.set('views', __dirname + '/views');
 	  app.set('view engine', 'jade');
-	  app.use(express.bodyParser({uploadDir:'./uploads'}));
+	  app.use(express.bodyParser());
 	  app.use(express.methodOverride());
 	  app.use(express.cookieParser());
 	  app.use(express.session({ secret: 'something', store: store }));
-
-	  // app.use(function (req, res) {
-	  //   res.end('<h2>Hello, your session id is ' + req.sessionID + '</h2>');
-	  // });
-
 	  app.use(app.router);
 	  app.use(express.static(__dirname + '/public'));
 
@@ -74,62 +43,21 @@ var store  = new express.session.MemoryStore;
 // Jade Routes ////////////////////////////////////////////////////////////////////////
 	
 	app.get('/', routes.index);
-    app.get('/example1', routes.example1);
-	app.get('/example2', routes.example2);
-	app.get('/example3', routes.example3);
-
-// Img upload ////////////////////////////////////////////////////////////////////////
-
-	app.post('/file-upload', function(req, res, next) {
-
-	    console.log(req.body);
-	    console.log(req.files.file.path);
-	    console.log('req.files: ' , req.files);
-
-	    res.send('File uploaded at: '  + req.files.file.size + ' bytes');
-
-		var img = new Image;
-
-		img.name = req.files.file.name;
-		img.contentType = req.files.file.type;
-		img.binary = fs.readFileSync(req.files.file.path);
-
-		img.save(function (err, img) {
-		  	console.log(img);	
-			if (err) throw err;
-		});
-	});
 
 	app.post('/motion', function(req, res, next) {
-	    console.log(req.body);
-	    res.send('Motion data collected: '  + req.size + ' bytes');
+	    
+	  console.log(req.body['eventType']);
+
+	    res.send('Motion data collected for '  + req.body['eventType'] + ' event');
+
+	    if (req.body['eventType'] == "motionstart"){
+	    	digitalWrite(ledPin2, HIGH);
+	    }
+	    else if (req.body['eventType'] == "motionend") {
+	    	digitalWrite(ledPin, HIGH);
+	    }
+
 	});	
-
-// API server ////////////////////////////////////////////////////////////////////////
-
-app.get('/api', function (req, res) {  
-  res.send('ImageAPI is running');  
-});
-
-app.get('/api/images', function (req, res){
-  return Image.find(function (err, images) {
-    if (!err) {
-      return res.send(images);
-    } else {
-      return console.log(err);
-    }
-  });
-});
-
-app.get('/api/images/:id', function (req, res){
-  return Image.findById(req.params.id, function (err, image) {
-    if (!err) {
-      return res.send(image);
-    } else {
-      return console.log(err);
-    }
-  });
-});
 
 app.listen(process.env.PORT || 3333);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
